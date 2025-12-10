@@ -1,5 +1,6 @@
 package com.tmfw.inventory_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,15 +56,14 @@ public class MainActivity extends AppCompatActivity {
                         String namaUser = res.getData().getNamaLengkap();
                         String jabatan = res.getData().getJabatan();
 
-                        Toast.makeText(MainActivity.this,
-                                "Login Sukses!\nHalo, " + namaUser + " (" + jabatan + ")",
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Login Sukses!", Toast.LENGTH_SHORT).show();
 
-                        // Disini nanti kode untuk pindah ke Dashboard Activity
-                        // Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-                        // startActivity(intent);
-                        // finish();
-
+                        // Pindah ke Dashboard & Bawa Data
+                        Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+                        intent.putExtra("NAMA", namaUser);     // Kirim Nama
+                        intent.putExtra("JABATAN", jabatan);   // Kirim Jabatan
+                        startActivity(intent);
+                        finish(); // Agar user tidak bisa kembali ke login pakai tombol back
                     } else {
                         // Login GAGAL (Password Salah / User Tidak Ditemukan)
                         Toast.makeText(MainActivity.this, res.getMessage(), Toast.LENGTH_SHORT).show();

@@ -4,9 +4,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    // ⚠️ GANTI IP INI SESUAI IP LAPTOP ANDA ⚠️
-    // Contoh: "http://192.168.1.10/nama_folder_api/index.php/"
-    // Pastikan diakhiri tanda '/'
     private static final String BASE_URL = "http://192.168.1.98/Project_Magang_API/index.php/";
 
     private static Retrofit retrofit;
