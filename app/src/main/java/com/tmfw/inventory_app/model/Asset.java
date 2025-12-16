@@ -24,10 +24,14 @@ public class Asset {
     @SerializedName("stok_min_qty")
     private String stok;
 
+    @SerializedName("asset_tahun") // Ganti dengan key JSON asli dari API Anda
+    private String tahun;
+
     // Getter methods
     public String getNama() { return nama; }
     public String getKode() { return kode; }
     public String getKondisi() { return kondisi; }
     public String getKategori() { return kategori; }
     public String getStok() { return stok; }
+    public String getTahun() { return tahun; }
 }
