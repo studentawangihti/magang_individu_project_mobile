@@ -30,10 +30,13 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         // Menu 2
+        btnTest1.setText("2. Lapor Kondisi");
         btnTest1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DashboardActivity.this, "Menu Test 1 dipilih", Toast.LENGTH_SHORT).show();
+                // Arahkan ke AssetListActivity agar user bisa memilih barang yang mau dilapor
+                Intent intent = new Intent(DashboardActivity.this, AssetListActivity.class);
+                startActivity(intent);
             }
         });
 

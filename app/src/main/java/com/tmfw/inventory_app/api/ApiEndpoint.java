@@ -7,6 +7,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface ApiEndpoint {
 
@@ -18,8 +19,19 @@ public interface ApiEndpoint {
             @Field("password") String password
     );
 
-    // [BARU] Endpoint untuk mengambil daftar Asset (dari Asset.php)
-    // URL lengkap akan menjadi: BASE_URL + "asset"
+    // [BENAR] Sesuaikan dengan nama Modul (api) dan Controller (Asset) di PHP Anda
     @GET("api/asset")
     Call<AssetResponse> getAssets();
+
+    // [PERBAIKAN DETAIL] Tambahkan '/detail' agar tidak memanggil fungsi index() lagi
+    @GET("api/asset/detail")
+    Call<AssetResponse> getAssetDetail(@Query("id") String assetId);
+
+    // [PERBAIKAN UPDATE] Pastikan path ini juga benar
+    @FormUrlEncoded
+    @POST("api/asset/update_asset")
+    Call<LoginResponse> updateAsset(
+            @Field("asset_id") String assetId,
+            @Field("kondisi") String kondisi
+    );
 }

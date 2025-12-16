@@ -1,6 +1,7 @@
 package com.tmfw.inventory_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,17 @@ public class AssetAdapter extends RecyclerView.Adapter<AssetAdapter.ViewHolder> 
         } else {
             holder.tvCategoryHeader.setVisibility(View.GONE);
         }
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AssetDetailActivity.class);
+                // Kita kirim seluruh object Asset karena sudah implements Serializable
+                intent.putExtra("DATA_ASSET", asset);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
