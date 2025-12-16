@@ -12,7 +12,7 @@ public interface ApiEndpoint {
 
     // Endpoint Login yang sudah ada (dari Auth.php)
     @FormUrlEncoded
-    @POST("auth/login")
+    @POST("api/auth/login")
     Call<LoginResponse> login(
             @Field("username") String username,
             @Field("password") String password
@@ -20,6 +20,6 @@ public interface ApiEndpoint {
 
     // [BARU] Endpoint untuk mengambil daftar Asset (dari Asset.php)
     // URL lengkap akan menjadi: BASE_URL + "asset"
-    @GET("asset")
+    @GET("api/asset")
     Call<AssetResponse> getAssets();
 }

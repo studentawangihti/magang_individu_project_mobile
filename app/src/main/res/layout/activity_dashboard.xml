@@ -4,38 +4,47 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="24dp"
-    android:gravity="center">
+    android:gravity="center_horizontal">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Selamat Datang!"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tvNamaUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nama User"
+        android:text="Main Menu"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:layout_marginTop="8dp"/>
+        android:textColor="@color/black"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"/>
 
-    <TextView
-        android:id="@+id/tvJabatan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Jabatan User"
+    <Button
+        android:id="@+id/btnListAsset"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="1. Lihat Data Asset"
         android:textSize="16sp"
-        android:layout_marginTop="4dp"
-        android:textColor="@android:color/darker_gray"/>
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnTest1"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="2. Fitur Test 1"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnTest2"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="3. Fitur Test 2"
+        android:textSize="16sp"/>
 
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Keluar"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="4dp"
         android:backgroundTint="#FF5252"/>
 
 </LinearLayout>

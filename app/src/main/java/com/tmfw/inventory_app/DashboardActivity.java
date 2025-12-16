@@ -2,38 +2,45 @@ package com.tmfw.inventory_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class DashboardActivity extends AppCompatActivity {
-
-    TextView tvNama, tvJabatan;
-    Button btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        tvNama = findViewById(R.id.tvNamaUser);
-        tvJabatan = findViewById(R.id.tvJabatan);
-        btnLogout = findViewById(R.id.btnLogout);
+        Button btnListAsset = findViewById(R.id.btnListAsset);
+        Button btnTest1 = findViewById(R.id.btnTest1);
+        Button btnTest2 = findViewById(R.id.btnTest2);
 
-        // Ambil data dari Intent
-        String nama = getIntent().getStringExtra("NAMA");
-        String jabatan = getIntent().getStringExtra("JABATAN");
+        // Menu 1: Pindah ke halaman List Asset
+        btnListAsset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardActivity.this, AssetListActivity.class);
+                startActivity(intent);
+            }
+        });
 
-        // Set Text (Tambahkan pengecekan null biar aman)
-        tvNama.setText(nama != null ? nama : "User");
-        tvJabatan.setText(jabatan != null ? jabatan : "-");
+        // Menu 2
+        btnTest1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DashboardActivity.this, "Menu Test 1 dipilih", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        // REVISI: Logika Logout yang lebih bersih
-        btnLogout.setOnClickListener(v -> {
-            Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
-            // Flag ini membersihkan tumpukan activity agar tombol Back tidak kembali ke Dashboard
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+        // Menu 3
+        btnTest2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DashboardActivity.this, "Menu Test 2 dipilih", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }
