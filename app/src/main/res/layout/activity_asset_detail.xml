@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:background="@color/white"
         android:padding="20dp"
-        android:elevation="4dp">
+        android:elevation="10dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -27,7 +27,8 @@
             android:layout_height="wrap_content"
             android:text="Kode Aset"
             android:textSize="12sp"
-            android:textColor="#757575"/>
+            android:textColor="#757575"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tvDetailKode"
@@ -43,7 +44,8 @@
             android:layout_height="wrap_content"
             android:text="Nama Barang"
             android:textSize="12sp"
-            android:textColor="#757575"/>
+            android:textColor="#757575"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tvDetailNama"
@@ -71,7 +73,8 @@
                     android:layout_height="wrap_content"
                     android:text="Kategori"
                     android:textSize="12sp"
-                    android:textColor="#757575"/>
+                    android:textColor="#757575"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/tvDetailKategori"
@@ -86,7 +89,8 @@
                     android:layout_height="wrap_content"
                     android:text="Tahun"
                     android:textSize="12sp"
-                    android:textColor="#757575"/>
+                    android:textColor="#757575"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/tvDetailTahun"
@@ -108,7 +112,8 @@
                     android:layout_height="wrap_content"
                     android:text="Stok Min"
                     android:textSize="12sp"
-                    android:textColor="#757575"/>
+                    android:textColor="#757575"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/tvDetailStok"
@@ -123,7 +128,8 @@
                     android:layout_height="wrap_content"
                     android:text="Satuan"
                     android:textSize="12sp"
-                    android:textColor="#757575"/>
+                    android:textColor="#757575"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/tvDetailSatuan"
@@ -156,7 +162,8 @@
             android:layout_height="wrap_content"
             android:text="Update status kondisi jika ditemukan kerusakan:"
             android:textSize="12sp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            android:textStyle="bold"/>
 
         <Spinner
             android:id="@+id/spinnerUpdateKondisi"

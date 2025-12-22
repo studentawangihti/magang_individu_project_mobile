@@ -37,6 +37,7 @@
             android:layout_marginStart="8dp"
             android:minHeight="0dp"
             android:padding="12dp"/>
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
