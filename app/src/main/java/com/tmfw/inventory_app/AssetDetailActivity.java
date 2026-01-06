@@ -22,9 +22,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.tmfw.inventory_app.api.ApiClient;
 import com.tmfw.inventory_app.model.Asset;
 import com.tmfw.inventory_app.model.AssetResponse;
-import com.tmfw.inventory_app.model.LoginResponse;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -35,21 +37,22 @@ import retrofit2.Response;
 
 public class AssetDetailActivity extends AppCompatActivity {
 
+    // Deklarasi Komponen UI
     private TextView tvNama, tvKode, tvLabelKondisi;
     private TextView tvKategori, tvTahun, tvHarga, tvStok, tvDeskripsi;
-    private Spinner spinnerKondisi;
-    private Button btnSimpan, btnKeHalamanLapor;
+    private Button btnKeHalamanLapor;
 
+    // Variabel Data
     private Asset asset;
-    private File photoFile;
-    private ImageView tempImageView;
+    private File photoFile;          // File foto yang siap diupload
+    private ImageView tempImageView; // Untuk preview di dalam dialog
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_asset_detail);
 
-        // Inisialisasi Views (SESUAI XML TERBARU)
+        // 1. Inisialisasi Views sesuai ID di XML terbaru
         tvNama = findViewById(R.id.tvDetailNama);
         tvKode = findViewById(R.id.tvDetailKode);
         tvLabelKondisi = findViewById(R.id.tvLabelKondisi);
@@ -59,29 +62,22 @@ public class AssetDetailActivity extends AppCompatActivity {
         tvStok = findViewById(R.id.tvDetailStok);
         tvDeskripsi = findViewById(R.id.tvDetailDeskripsi);
 
-        spinnerKondisi = findViewById(R.id.spinnerUpdateKondisi);
-        btnSimpan = findViewById(R.id.btnSimpanLaporan);
         btnKeHalamanLapor = findViewById(R.id.btnKeHalamanLapor);
 
-        // Ambil Data dari Intent
+        // 2. Ambil Data dari Intent
         if (getIntent().hasExtra("DATA_ASSET")) {
             asset = (Asset) getIntent().getSerializableExtra("DATA_ASSET");
         }
 
-        // Cek null agar tidak Force Close
+        // 3. Tampilkan Data jika ada
         if (asset != null) {
             tampilkanData();
-            setupSpinner();
 
-            btnSimpan.setOnClickListener(v -> {
-                String kondisiBaru = spinnerKondisi.getSelectedItem().toString();
-                updateKondisiKeServer(asset.getId(), kondisiBaru);
-            });
-
+            // Event Listener Tombol Lapor
             btnKeHalamanLapor.setOnClickListener(v -> showDialogLapor());
         } else {
             Toast.makeText(this, "Gagal memuat data aset", Toast.LENGTH_SHORT).show();
-            finish(); // Tutup activity jika data error
+            finish();
         }
     }
 
@@ -90,7 +86,6 @@ public class AssetDetailActivity extends AppCompatActivity {
         tvKode.setText(asset.getKode());
         tvKategori.setText(asset.getKategori());
 
-        // Safety check untuk string
         tvTahun.setText(asset.getTahun() != null ? asset.getTahun() : "-");
 
         String stok = asset.getStok() != null ? asset.getStok() : "0";
@@ -100,67 +95,157 @@ public class AssetDetailActivity extends AppCompatActivity {
         tvHarga.setText("Rp " + (asset.getHarga() != null ? asset.getHarga() : "0"));
         tvDeskripsi.setText(asset.getDeskripsi() != null ? asset.getDeskripsi() : "-");
 
-        // Warna Label
+        // Set Warna Label Kondisi
         String kondisi = asset.getKondisi() != null ? asset.getKondisi() : "BAIK";
         tvLabelKondisi.setText(kondisi);
 
         if (kondisi.equalsIgnoreCase("RUSAK") || kondisi.equalsIgnoreCase("HILANG")) {
             tvLabelKondisi.setBackgroundColor(Color.RED);
         } else if (kondisi.equalsIgnoreCase("PERBAIKAN")) {
-            tvLabelKondisi.setBackgroundColor(Color.parseColor("#FF9800"));
+            tvLabelKondisi.setBackgroundColor(Color.parseColor("#FF9800")); // Orange
         } else {
-            tvLabelKondisi.setBackgroundColor(Color.parseColor("#4CAF50"));
+            tvLabelKondisi.setBackgroundColor(Color.parseColor("#4CAF50")); // Hijau
         }
     }
 
-    // --- SISA KODE (Setup Spinner, Update Server, Dialog Lapor) TETAP SAMA ---
-    // Copy paste bagian bawahnya dari file Anda sebelumnya, karena logika itu sudah benar.
-    // Yang penting bagian onCreate dan XML di atas sinkron.
-
-    private void setupSpinner() {
-        String[] opsi = {"BAIK", "RUSAK", "HILANG", "PERBAIKAN"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opsi);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerKondisi.setAdapter(adapter);
-    }
-
-    // ... Copy method showDialogLapor, updateKondisiKeServer, onActivityResult dari sebelumnya ...
-    private void updateKondisiKeServer(String id, String kondisi) {
-        btnSimpan.setEnabled(false);
-        btnSimpan.setText("Menyimpan...");
-        ApiClient.getApi().updateAsset(id, kondisi).enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                btnSimpan.setEnabled(true);
-                btnSimpan.setText("Simpan");
-                if (response.isSuccessful()) {
-                    Toast.makeText(AssetDetailActivity.this, "Sukses!", Toast.LENGTH_SHORT).show();
-                    tvLabelKondisi.setText(kondisi);
-                } else {
-                    Toast.makeText(AssetDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                btnSimpan.setEnabled(true);
-                btnSimpan.setText("Simpan");
-                Toast.makeText(AssetDetailActivity.this, "Error Koneksi", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
+    // --- LOGIKA DIALOG LAPOR (POPUP) ---
     private void showDialogLapor() {
-        // ... (Gunakan kode dialog lapor yang sudah kamu punya)
-        // Pastikan Layout dialog_lapor_asset.xml tidak ada error juga
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_lapor_asset, null);
         builder.setView(dialogView);
+
         AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
 
-        // ... inisialisasi komponen dialog ...
-        // Agar tidak panjang, saya asumsikan bagian ini sudah aman karena errornya di "Buka Menu" (onCreate)
+        // Init Komponen Dialog
+        Spinner spKondisi = dialogView.findViewById(R.id.spinnerKondisi);
+        EditText etJudul = dialogView.findViewById(R.id.etJudul);
+        EditText etDeskripsi = dialogView.findViewById(R.id.etDeskripsi);
+        Button btnFoto = dialogView.findViewById(R.id.btnPilihFoto);
+        ImageView ivPreview = dialogView.findViewById(R.id.ivPreview);
+        Button btnKirim = dialogView.findViewById(R.id.btnKirim);
+        Button btnBatal = dialogView.findViewById(R.id.btnBatal);
 
+        // Setup Spinner Dialog
+        String[] statusOptions = {"RUSAK", "PERBAIKAN", "HILANG", "BAIK"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statusOptions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spKondisi.setAdapter(adapter);
+
+        // Listener Pilih Foto
+        btnFoto.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, 100);
+            tempImageView = ivPreview; // Simpan referensi view agar bisa diupdate di onActivityResult
+        });
+
+        // Listener Kirim
+        btnKirim.setOnClickListener(v -> {
+            String judul = etJudul.getText().toString();
+            String desk = etDeskripsi.getText().toString();
+            String kond = spKondisi.getSelectedItem().toString();
+
+            if(judul.isEmpty()) {
+                Toast.makeText(this, "Judul Laporan Wajib Diisi", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            uploadLaporanTiket(judul, desk, kond, dialog);
+        });
+
+        btnBatal.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
+    }
+
+    // --- LOGIKA UPLOAD KE SERVER ---
+    private void uploadLaporanTiket(String judul, String deskripsi, String kondisiBaru, AlertDialog dialog) {
+        // TODO: Ganti dengan ID User yang login sesungguhnya (dari Session/SharedPreferences)
+        String userId = "P000000000029";
+
+        // Bungkus data text
+        RequestBody reqAssetId = RequestBody.create(MediaType.parse("text/plain"), asset.getId());
+        RequestBody reqUserId = RequestBody.create(MediaType.parse("text/plain"), userId);
+        RequestBody reqJudul = RequestBody.create(MediaType.parse("text/plain"), judul);
+        RequestBody reqDesk = RequestBody.create(MediaType.parse("text/plain"), deskripsi);
+        RequestBody reqKondisi = RequestBody.create(MediaType.parse("text/plain"), kondisiBaru);
+
+        // Bungkus data file gambar (jika ada)
+        MultipartBody.Part bodyGambar = null;
+        if (photoFile != null) {
+            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), photoFile);
+            bodyGambar = MultipartBody.Part.createFormData("image_file", photoFile.getName(), reqFile);
+        }
+
+        // Panggil Retrofit
+        ApiClient.getApi().laporKerusakan(reqAssetId, reqUserId, reqJudul, reqDesk, reqKondisi, bodyGambar)
+                .enqueue(new Callback<AssetResponse>() {
+                    @Override
+                    public void onResponse(Call<AssetResponse> call, Response<AssetResponse> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(AssetDetailActivity.this, "Laporan Terkirim!", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                            finish(); // Kembali ke list agar data ter-refresh
+                        } else {
+                            Toast.makeText(AssetDetailActivity.this, "Gagal: " + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<AssetResponse> call, Throwable t) {
+                        Toast.makeText(AssetDetailActivity.this, "Error Jaringan: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // --- PERBAIKAN UTAMA: MENANGANI FILE GAMBAR (SCOPED STORAGE) ---
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+
+            // 1. Tampilkan Preview di Dialog
+            if(tempImageView != null) {
+                tempImageView.setVisibility(View.VISIBLE);
+                tempImageView.setImageURI(selectedImage);
+            }
+
+            // 2. Salin URI ke File Cache (Solusi EACCES Permission Denied)
+            try {
+                photoFile = uriToFile(selectedImage);
+            } catch (Exception e) {
+                Toast.makeText(this, "Gagal memproses gambar", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Fungsi Helper: Menyalin gambar dari Galeri ke Folder Cache Aplikasi
+    private File uriToFile(Uri uri) {
+        try {
+            // Buat file temporary di folder cache
+            File file = new File(getCacheDir(), "temp_upload_" + System.currentTimeMillis() + ".jpg");
+
+            // Buka stream dari ContentResolver (Galeri)
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+
+            // Buka stream ke file cache
+            OutputStream outputStream = new FileOutputStream(file);
+
+            // Salin data
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            outputStream.close();
+            inputStream.close();
+
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

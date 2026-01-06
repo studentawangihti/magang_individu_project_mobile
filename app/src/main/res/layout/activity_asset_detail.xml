@@ -76,7 +76,7 @@
                 android:padding="20dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Informasi Detail"
                     android:textStyle="bold"
@@ -84,41 +84,17 @@
                     android:layout_marginBottom="16dp"
                     android:textColor="#000"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Kategori" android:textSize="12sp" android:textColor="#888"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tvDetailKategori" android:text="-" android:textSize="16sp" android:textColor="#333" android:textStyle="bold" android:layout_marginBottom="12dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kategori" android:textSize="12sp" android:textColor="#888"/>
+                <TextView android:id="@+id/tvDetailKategori" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="-" android:textSize="16sp" android:textColor="#333" android:textStyle="bold" android:layout_marginBottom="12dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tahun Perolehan" android:textSize="12sp" android:textColor="#888"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tvDetailTahun" android:text="-" android:textSize="16sp" android:textColor="#333" android:textStyle="bold" android:layout_marginBottom="12dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tahun Perolehan" android:textSize="12sp" android:textColor="#888"/>
+                <TextView android:id="@+id/tvDetailTahun" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="-" android:textSize="16sp" android:textColor="#333" android:textStyle="bold" android:layout_marginBottom="12dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Stok Saat Ini" android:textSize="12sp" android:textColor="#888"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tvDetailStok" android:text="-" android:textSize="16sp" android:textColor="#333" android:textStyle="bold" android:layout_marginBottom="12dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Stok Saat Ini" android:textSize="12sp" android:textColor="#888"/>
+                <TextView android:id="@+id/tvDetailStok" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="-" android:textSize="16sp" android:textColor="#333" android:textStyle="bold" android:layout_marginBottom="12dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Harga Beli" android:textSize="12sp" android:textColor="#888"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tvDetailHarga" android:text="-" android:textSize="16sp" android:textColor="#333" android:textStyle="bold"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Harga Beli" android:textSize="12sp" android:textColor="#888"/>
+                <TextView android:id="@+id/tvDetailHarga" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="-" android:textSize="16sp" android:textColor="#333" android:textStyle="bold"/>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -126,7 +102,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="24dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="2dp"
             app:cardBackgroundColor="@android:color/white">
@@ -138,7 +114,7 @@
                 android:padding="20dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Keterangan"
                     android:textStyle="bold"
@@ -156,64 +132,14 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Menu Aksi"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="4dp"/>
-
         <Button
             android:id="@+id/btnKeHalamanLapor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Buat Laporan Kerusakan"
             android:backgroundTint="#FF9800"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="20dp"
             android:minHeight="55dp"/>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="10dp"
-                android:background="@android:color/white">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Update Status:"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="8dp"/>
-
-                <Spinner
-                    android:id="@+id/spinnerUpdateKondisi"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:minHeight="48dp"/>
-
-                <Button
-                    android:id="@+id/btnSimpanLaporan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Simpan"
-                    android:textSize="12sp"
-                    android:backgroundTint="#2196F3"
-                    android:minHeight="40dp"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <View android:layout_width="match_parent" android:layout_height="30dp"/>
 
     </LinearLayout>
 </ScrollView>
