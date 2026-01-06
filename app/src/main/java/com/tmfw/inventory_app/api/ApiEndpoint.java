@@ -9,6 +9,12 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.http.Multipart;
+import retrofit2.http.Part;
+
 public interface ApiEndpoint {
 
     // Endpoint Login yang sudah ada (dari Auth.php)
@@ -33,5 +39,24 @@ public interface ApiEndpoint {
     Call<LoginResponse> updateAsset(
             @Field("asset_id") String assetId,
             @Field("kondisi") String kondisi
+    );
+
+    @Multipart
+    @POST("api/asset/lapor_kerusakan")
+    Call<ResponseBody> laporKerusakan(
+            @Part("asset_id") RequestBody assetId,
+            @Part("kondisi") RequestBody kondisi,
+            @Part MultipartBody.Part image
+    );
+
+    @Multipart
+    @POST("api/asset/lapor_kerusakan")
+    Call<AssetResponse> laporKerusakan(
+            @Part("asset_id") RequestBody assetId,
+            @Part("user_id") RequestBody userId,
+            @Part("judul") RequestBody judul,
+            @Part("deskripsi") RequestBody deskripsi,
+            @Part("kondisi_baru") RequestBody kondisiBaru,
+            @Part MultipartBody.Part imageFile
     );
 }
