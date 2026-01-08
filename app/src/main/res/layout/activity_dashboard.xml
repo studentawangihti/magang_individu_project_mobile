@@ -14,8 +14,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:background="@drawable/bg_login"
+            android:layout_height="wrap_content"
             android:padding="24dp">
 
             <TextView
@@ -23,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Halo, User!"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -32,16 +31,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvGreeting"
                 android:text="Selamat datang di Inventory App"
-                android:textColor="#E0E0E0"
+                android:textColor="@android:color/black"
                 android:textSize="14sp"
                 android:layout_marginTop="4dp"/>
-
-            <ImageView
-                android:layout_width="150dp"
-                android:layout_height="120dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:src="@drawable/undraw_goal_rulh" />
         </RelativeLayout>
 
         <GridLayout

@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // Pastikan nama layout XML sesuai
+        setContentView(R.layout.activity_main);
 
         // Inisialisasi View
         etUsername = findViewById(R.id.etUsername);
@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
                         // Login BERHASIL
                         String namaUser = res.getData().getNamaLengkap();
                         String jabatan = res.getData().getJabatan();
+                        // [BARU] Ambil Role ID (contoh: "01.01", "02.01")
+                        String roleId = res.getData().getRole();
 
                         Toast.makeText(MainActivity.this, "Login Sukses!", Toast.LENGTH_SHORT).show();
 
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
                         intent.putExtra("NAMA", namaUser);     // Kirim Nama
                         intent.putExtra("JABATAN", jabatan);   // Kirim Jabatan
+                        intent.putExtra("ROLE", roleId);       // [BARU] Kirim Role
+
                         startActivity(intent);
                         finish(); // Agar user tidak bisa kembali ke login pakai tombol back
                     } else {

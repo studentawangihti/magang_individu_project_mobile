@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#EBE1D1"
     android:padding="16dp">
 
     <TextView
@@ -25,7 +26,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/ic_launcher_background"
             app:iconifiedByDefault="false"
             app:queryHint="Cari nama/kode..." />
 
