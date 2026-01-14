@@ -12,7 +12,7 @@ import androidx.cardview.widget.CardView;
 public class DashboardActivity extends AppCompatActivity {
 
     // Komponen UI
-    private CardView cardListAsset, cardReportAsset, cardLogout;
+    private CardView cardListAsset, cardReportAsset, cardLogout, cardHistory;
     private TextView tvGreeting, tvJabatan;
 
     // Data User
@@ -36,6 +36,7 @@ public class DashboardActivity extends AppCompatActivity {
         cardListAsset   = findViewById(R.id.cardListAsset);
         cardReportAsset = findViewById(R.id.cardReportAsset); // Tombol Baru
         cardLogout      = findViewById(R.id.cardLogout);
+        cardHistory = findViewById(R.id.cardHistory);
 
         // 3. Set Teks
         tvGreeting.setText("Halo, " + (namaUser != null ? namaUser : "User"));
@@ -68,6 +69,17 @@ public class DashboardActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             Toast.makeText(DashboardActivity.this, "Berhasil Keluar", Toast.LENGTH_SHORT).show();
+        });
+
+        // MENU 4
+        cardHistory.setOnClickListener(v -> {
+            if (userId == null) {
+                Toast.makeText(DashboardActivity.this, "Login ulang diperlukan", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent(DashboardActivity.this, HistoryActivity.class);
+            intent.putExtra("USER_ID", userId); // WAJIB BAWA USER ID
+            startActivity(intent);
         });
     }
 }

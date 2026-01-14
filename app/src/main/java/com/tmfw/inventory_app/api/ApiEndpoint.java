@@ -4,6 +4,7 @@ import com.tmfw.inventory_app.model.AssetResponse;
 import com.tmfw.inventory_app.model.GeneralResponse; // Import Model Baru
 import com.tmfw.inventory_app.model.LoginResponse;
 import com.tmfw.inventory_app.model.SingleAssetResponse;
+import com.tmfw.inventory_app.model.HistoryResponse;
 
 import okhttp3.MultipartBody; // Wajib untuk File
 import okhttp3.RequestBody;   // Wajib untuk Teks dalam Multipart
@@ -14,6 +15,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart; // Annotation Multipart
 import retrofit2.http.POST;
 import retrofit2.http.Part;      // Annotation Part
+import retrofit2.http.Query;
 
 public interface ApiEndpoint {
 
@@ -41,4 +43,7 @@ public interface ApiEndpoint {
             @Part("deskripsi") RequestBody deskripsi,
             @Part MultipartBody.Part imageFile
     );
+
+    @GET("api/asset/history")
+    Call<HistoryResponse> getHistory(@Query("user_id") String userId);
 }
