@@ -3,42 +3,41 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Inventory_App"
         android:usesCleartextTraffic="true"
-
         android:requestLegacyExternalStorage="true"
-
         tools:targetApi="31">
-        <activity
-            android:name=".AssetDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+
+        <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".DashboardActivity" />
+        <activity android:name=".AssetListActivity" />
+
         <activity
-            android:name=".DashboardActivity"
+            android:name=".AssetDetailActivity"
             android:exported="false" />
+
         <activity
-            android:name=".AssetListActivity"
-            android:exported="false" />
+            android:name=".ReportAssetActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -50,9 +49,5 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity
-            android:name=".ReportActivity"
-            android:label="Lapor Kerusakan" />
     </application>
-
 </manifest>

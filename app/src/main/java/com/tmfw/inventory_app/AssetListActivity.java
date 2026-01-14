@@ -1,30 +1,30 @@
 package com.tmfw.inventory_app;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tmfw.inventory_app.api.ApiClient;
+import com.tmfw.inventory_app.api.ApiEndpoint;
 import com.tmfw.inventory_app.model.Asset;
 import com.tmfw.inventory_app.model.AssetResponse;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,213 +33,188 @@ public class AssetListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private AssetAdapter adapter;
-    private SearchView searchView;
-    private Button btnFilter;
 
-    // Data Master
-    private List<Asset> fullAssetList = new ArrayList<>();
+    // Data Utama (Master) & Data Tampil
+    private List<Asset> masterList = new ArrayList<>();
+    private List<Asset> displayedList = new ArrayList<>();
 
-    // Status Filter Aktif
-    private String activeSearch = "";
-    private String activeCategory = "Semua";
-    private String activeCondition = "Semua";
-    private String activeYear = "Semua";
+    private EditText etSearch;
+    private ImageView btnBack, btnFilter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_asset_list);
 
-        recyclerView = findViewById(R.id.recyclerViewAsset);
-        searchView = findViewById(R.id.searchViewAsset);
-        btnFilter = findViewById(R.id.btnFilter);
+        // 1. Inisialisasi View
+        recyclerView = findViewById(R.id.rvAsset);
+        etSearch = findViewById(R.id.etSearch);
+        btnBack = findViewById(R.id.btnBack);
+        btnFilter = findViewById(R.id.btnFilter); // Tombol Baru
 
+        // 2. Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new AssetAdapter(this, displayedList);
+        recyclerView.setAdapter(adapter);
 
-        loadDataAsset();
+        // 3. Setup Listeners
+        btnBack.setOnClickListener(v -> finish());
 
-        // SEARCH
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override public boolean onQueryTextSubmit(String query) { return false; }
-
+        // Listener Search Live
+        etSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextChange(String newText) {
-                activeSearch = newText;
-                combineFilterAndSearch();
-                return true;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterData(s.toString()); // Filter Search
             }
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
 
-        // FILTER BUTTON
+        // Listener Tombol Filter
         btnFilter.setOnClickListener(v -> showFilterDialog());
+
+        // 4. Panggil Data
+        loadDataAsset();
     }
 
-    // =======================
-    // FILTER DIALOG (SPINNER)
-    // =======================
-    private void showFilterDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View dialogView = LayoutInflater.from(this)
-                .inflate(R.layout.dialog_filter, null);
-        builder.setView(dialogView);
-
-        AlertDialog dialog = builder.create();
-
-        Spinner spKategori = dialogView.findViewById(R.id.spinnerKategori);
-        Spinner spKondisi  = dialogView.findViewById(R.id.spinnerKondisi);
-        Spinner spTahun    = dialogView.findViewById(R.id.spinnerTahun);
-        Button btnTerapkan = dialogView.findViewById(R.id.btnTerapkan);
-        Button btnReset    = dialogView.findViewById(R.id.btnReset);
-
-        setupSpinner(spKategori, getUniqueList("kategori"), activeCategory);
-        setupSpinner(spKondisi, getUniqueList("kondisi"), activeCondition);
-        setupSpinner(spTahun, getUniqueList("tahun"), activeYear);
-
-        btnTerapkan.setOnClickListener(v -> {
-            activeCategory = spKategori.getSelectedItem().toString();
-            activeCondition = spKondisi.getSelectedItem().toString();
-            activeYear = spTahun.getSelectedItem().toString();
-
-            combineFilterAndSearch();
-            dialog.dismiss();
-
-            if (!activeCategory.equals("Semua") ||
-                    !activeCondition.equals("Semua") ||
-                    !activeYear.equals("Semua")) {
-                btnFilter.setText("Filter Aktif");
-            } else {
-                btnFilter.setText("Filter");
-            }
-        });
-
-        btnReset.setOnClickListener(v -> {
-            activeCategory = "Semua";
-            activeCondition = "Semua";
-            activeYear = "Semua";
-
-            combineFilterAndSearch();
-            dialog.dismiss();
-            btnFilter.setText("Filter");
-        });
-
-        dialog.show();
-    }
-
-    // =======================
-    // FILTER + SEARCH LOGIC
-    // =======================
-    private void combineFilterAndSearch() {
-        List<Asset> filteredList = new ArrayList<>();
-
-        for (Asset item : fullAssetList) {
-
-            boolean matchSearch =
-                    item.getNama().toLowerCase().contains(activeSearch.toLowerCase()) ||
-                            item.getKode().toLowerCase().contains(activeSearch.toLowerCase());
-
-            boolean matchCategory =
-                    activeCategory.equals("Semua") ||
-                            item.getKategori().equalsIgnoreCase(activeCategory);
-
-            boolean matchCondition =
-                    activeCondition.equals("Semua") ||
-                            item.getKondisi().equalsIgnoreCase(activeCondition);
-
-            boolean matchYear =
-                    activeYear.equals("Semua") ||
-                            (item.getTahun() != null &&
-                                    item.getTahun().equalsIgnoreCase(activeYear));
-
-            if (matchSearch && matchCategory && matchCondition && matchYear) {
-                filteredList.add(item);
-            }
-        }
-
-        sortAssetsByCategory(filteredList);
-
-        if (adapter != null) {
-            adapter.updateList(filteredList);
-        }
-    }
-
-    // =======================
-    // API LOAD DATA
-    // =======================
     private void loadDataAsset() {
-        ApiClient.getApi().getAssets().enqueue(new Callback<AssetResponse>() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Mengambil data aset...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        ApiEndpoint api = ApiClient.getClient().create(ApiEndpoint.class);
+        Call<AssetResponse> call = api.getAssets();
+
+        call.enqueue(new Callback<AssetResponse>() {
             @Override
-            public void onResponse(Call<AssetResponse> call,
-                                   Response<AssetResponse> response) {
+            public void onResponse(Call<AssetResponse> call, Response<AssetResponse> response) {
+                progressDialog.dismiss();
+
                 if (response.isSuccessful() && response.body() != null) {
-                    fullAssetList = response.body().getData();
-                    sortAssetsByCategory(fullAssetList);
-                    adapter = new AssetAdapter(AssetListActivity.this, fullAssetList);
-                    recyclerView.setAdapter(adapter);
+                    if (response.body().getStatus() == 200) {
+                        masterList = response.body().getData(); // Simpan ke Master
+                        displayedList.clear();
+                        displayedList.addAll(masterList); // Tampilkan Semua Awalnya
+                        adapter.updateList(displayedList);
+                    } else {
+                        Toast.makeText(AssetListActivity.this, "Data Kosong", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(AssetListActivity.this,
-                            "Gagal memuat data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AssetListActivity.this, "Gagal ambil data", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<AssetResponse> call, Throwable t) {
-                Toast.makeText(AssetListActivity.this,
-                        "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                Toast.makeText(AssetListActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    // =======================
-    // SORTING
-    // =======================
-    private void sortAssetsByCategory(List<Asset> list) {
-        Collections.sort(list, new Comparator<Asset>() {
-            @Override
-            public int compare(Asset o1, Asset o2) {
-                String k1 = o1.getKategori() != null ? o1.getKategori() : "";
-                String k2 = o2.getKategori() != null ? o2.getKategori() : "";
-                return k1.compareToIgnoreCase(k2);
+    // --- LOGIKA FILTER UTAMA ---
+
+    // 1. Fungsi Search Text
+    private void filterData(String query) {
+        displayedList.clear();
+        if (query.isEmpty()) {
+            displayedList.addAll(masterList);
+        } else {
+            for (Asset item : masterList) {
+                if (item.getNama().toLowerCase().contains(query.toLowerCase()) ||
+                        item.getKode().toLowerCase().contains(query.toLowerCase())) {
+                    displayedList.add(item);
+                }
             }
-        });
+        }
+        adapter.updateList(displayedList);
     }
 
-    // =======================
-    // HELPER
-    // =======================
-    private List<String> getUniqueList(String type) {
-        Set<String> set = new HashSet<>();
-        set.add("Semua");
+    // 2. Fungsi Filter Dialog
+    private void showFilterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_filter, null);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
 
-        for (Asset item : fullAssetList) {
-            if (type.equals("kategori") && item.getKategori() != null)
-                set.add(item.getKategori());
+        Spinner spinKategori = view.findViewById(R.id.spinKategori);
+        Spinner spinKondisi = view.findViewById(R.id.spinKondisi);
+        Spinner spinTahun = view.findViewById(R.id.spinTahun);
+        Button btnTerapkan = view.findViewById(R.id.btnTerapkan);
+        Button btnReset = view.findViewById(R.id.btnReset);
 
-            if (type.equals("kondisi") && item.getKondisi() != null)
-                set.add(item.getKondisi());
+        // --- SIAPKAN DATA SPINNER SECARA OTOMATIS ---
 
-            if (type.equals("tahun") && item.getTahun() != null)
-                set.add(item.getTahun());
+        // A. Spinner Kategori (Ambil Unik dari Data Master)
+        Set<String> catSet = new HashSet<>();
+        for (Asset a : masterList) { if(a.getKategori() != null) catSet.add(a.getKategori()); }
+        List<String> listKategori = new ArrayList<>(catSet);
+        Collections.sort(listKategori);
+        listKategori.add(0, "Semua Kategori"); // Pilihan Default
+        ArrayAdapter<String> adapterKat = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listKategori);
+        spinKategori.setAdapter(adapterKat);
+
+        // B. Spinner Kondisi (Manual)
+        String[] listKondisi = {"Semua Kondisi", "BAIK", "RUSAK", "HILANG", "DIPERBAIKI"};
+        ArrayAdapter<String> adapterKon = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listKondisi);
+        spinKondisi.setAdapter(adapterKon);
+
+        // C. Spinner Tahun (Ambil Unik dari Data Master)
+        Set<String> yearSet = new HashSet<>();
+        for (Asset a : masterList) { if(a.getTahun() != null) yearSet.add(a.getTahun()); }
+        List<String> listTahun = new ArrayList<>(yearSet);
+        Collections.sort(listTahun, Collections.reverseOrder()); // Tahun terbaru diatas
+        listTahun.add(0, "Semua Tahun");
+        ArrayAdapter<String> adapterThn = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listTahun);
+        spinTahun.setAdapter(adapterThn);
+
+        // --- AKSI TOMBOL ---
+
+        btnTerapkan.setOnClickListener(v -> {
+            String selKat = spinKategori.getSelectedItem().toString();
+            String selKon = spinKondisi.getSelectedItem().toString();
+            String selThn = spinTahun.getSelectedItem().toString();
+
+            terapkanFilter(selKat, selKon, selThn);
+            dialog.dismiss();
+        });
+
+        btnReset.setOnClickListener(v -> {
+            // Reset ke awal
+            displayedList.clear();
+            displayedList.addAll(masterList);
+            adapter.updateList(displayedList);
+            dialog.dismiss();
+            Toast.makeText(this, "Filter Direset", Toast.LENGTH_SHORT).show();
+        });
+
+        dialog.show();
+    }
+
+    private void terapkanFilter(String kategori, String kondisi, String tahun) {
+        displayedList.clear();
+
+        for (Asset item : masterList) {
+            boolean matchKategori = kategori.equals("Semua Kategori") || item.getKategori().equalsIgnoreCase(kategori);
+            boolean matchKondisi = kondisi.equals("Semua Kondisi") || item.getKondisi().equalsIgnoreCase(kondisi);
+            boolean matchTahun = tahun.equals("Semua Tahun") || item.getTahun().equalsIgnoreCase(tahun);
+
+            // Item harus cocok dengan SEMUA kriteria (AND logic)
+            if (matchKategori && matchKondisi && matchTahun) {
+                displayedList.add(item);
+            }
         }
 
-        List<String> list = new ArrayList<>(set);
-        Collections.sort(list);
-        list.remove("Semua");
-        list.add(0, "Semua");
-        return list;
-    }
+        adapter.updateList(displayedList);
 
-    private void setupSpinner(Spinner spinner,
-                              List<String> data,
-                              String currentValue) {
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(this,
-                        android.R.layout.simple_spinner_item, data);
-        adapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        if (data.contains(currentValue)) {
-            spinner.setSelection(data.indexOf(currentValue));
+        if (displayedList.isEmpty()) {
+            Toast.makeText(this, "Tidak ada aset yang cocok", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Menampilkan " + displayedList.size() + " aset", Toast.LENGTH_SHORT).show();
         }
     }
 }

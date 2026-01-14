@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5"
+    tools:context=".ReportAssetActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/btnBackReport"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_launcher_foreground"
+            app:tint="@android:color/black"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lapor Kerusakan"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                android:backgroundTint="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pilih Aset Bermasalah"
+                        android:textStyle="bold"
+                        android:textColor="#333"
+                        android:layout_marginBottom="8dp"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_launcher_background"
+                        android:backgroundTint="#F0F0F0"
+                        android:padding="4dp">
+
+                        <Spinner
+                            android:id="@+id/spinAsset"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"/>
+                    </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*Pastikan memilih aset yang benar"
+                        android:textSize="10sp"
+                        android:textColor="#757575"
+                        android:layout_marginBottom="16dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Deskripsi Kerusakan"
+                        android:textStyle="bold"
+                        android:textColor="#333"
+                        android:layout_marginBottom="8dp"/>
+
+                    <EditText
+                        android:id="@+id/etDeskripsi"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:background="#F0F0F0"
+                        android:gravity="top|start"
+                        android:hint="Jelaskan kronologi atau kondisi kerusakan..."
+                        android:padding="12dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="16dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Foto Bukti (Wajib)"
+                        android:textStyle="bold"
+                        android:textColor="#333"
+                        android:layout_marginBottom="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <Button
+                            android:id="@+id/btnPilihFoto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pilih Foto"
+                            android:textSize="12sp"
+                            android:backgroundTint="#FF9800"/>
+
+                        <TextView
+                            android:id="@+id/tvNamaFoto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Belum ada foto dipilih"
+                            android:textSize="12sp"
+                            android:layout_marginStart="12dp"
+                            android:textColor="#757575"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imgPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="12dp"
+                        android:scaleType="centerCrop"
+                        android:background="#EEEEEE"
+                        android:src="@drawable/ic_launcher_foreground"
+                        app:tint="#BDBDBD"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/btnKirimLaporan"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="KIRIM LAPORAN"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="#D32F2F"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

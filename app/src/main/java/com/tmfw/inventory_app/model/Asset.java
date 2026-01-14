@@ -2,10 +2,11 @@ package com.tmfw.inventory_app.model;
 
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
+import java.util.List;
 
 public class Asset implements Serializable {
 
-    // Field yang sudah ada
+    // --- FIELD DATA UTAMA ---
     @SerializedName("asset_id")
     private String id;
 
@@ -36,8 +37,12 @@ public class Asset implements Serializable {
     @SerializedName("asset_ket")
     private String deskripsi;
 
-    @SerializedName("image_url")
-    private String imageUrl;
+    @SerializedName("asset_foto")
+    private String foto;
+
+    // --- FIELD BARU: UNTUK MENAMPUNG SPESIFIKASI TAMBAHAN ---
+    @SerializedName("detail_tambahan")
+    private List<DetailItem> detailTambahan;
 
     // --- GETTER ---
     public String getId() { return id; }
@@ -50,5 +55,18 @@ public class Asset implements Serializable {
     public String getKondisi() { return kondisi; }
     public String getHarga() { return harga; }
     public String getDeskripsi() { return deskripsi; }
-    public String getImageUrl() { return imageUrl; }
+    public String getFoto() { return foto; }
+    public List<DetailItem> getDetailTambahan() { return detailTambahan; }
+
+    // --- CLASS KECIL UNTUK MEMBACA LABEL & VALUE ---
+    public static class DetailItem implements Serializable {
+        @SerializedName("label")
+        private String label;
+
+        @SerializedName("value")
+        private String value;
+
+        public String getLabel() { return label; }
+        public String getValue() { return value; }
+    }
 }

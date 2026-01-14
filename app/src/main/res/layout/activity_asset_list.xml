@@ -1,48 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#EBE1D1"
-    android:padding="16dp">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Daftar Aset Inventory"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
+    android:background="#F5F5F5"
+    tools:context=".AssetListActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:elevation="4dp"
         android:orientation="horizontal"
-        android:layout_marginBottom="12dp">
+        android:gravity="center_vertical"
+        android:padding="16dp">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchViewAsset"
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp"
+            android:src="@drawable/ic_launcher_foreground"
+            app:tint="@android:color/black" />
+
+        <EditText
+            android:id="@+id/etSearch"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
-            app:iconifiedByDefault="false"
-            app:queryHint="Cari nama/kode..." />
+            android:layout_marginHorizontal="12dp"
+            android:hint="Cari Aset..."
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingHorizontal="16dp"
+            android:textSize="14sp" />
 
-        <Button
+        <ImageView
             android:id="@+id/btnFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Filter"
-            android:layout_marginStart="8dp"
-            android:minHeight="0dp"
-            android:padding="12dp"/>
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            app:tint="@android:color/black"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewAsset"
+        android:id="@+id/rvAsset"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_asset" />
 
 </LinearLayout>

@@ -54,17 +54,18 @@ public class MainActivity extends AppCompatActivity {
                     if (res.getStatus() == 200) {
                         // Login BERHASIL
                         String namaUser = res.getData().getNamaLengkap();
-                        String jabatan = res.getData().getJabatan();
-                        // [BARU] Ambil Role ID (contoh: "01.01", "02.01")
-                        String roleId = res.getData().getRole();
+                        String jabatan  = res.getData().getJabatan();
+                        String roleId   = res.getData().getRole();
+                        String userId   = res.getData().getUserId(); // [PENTING] Ambil User ID
 
                         Toast.makeText(MainActivity.this, "Login Sukses!", Toast.LENGTH_SHORT).show();
 
                         // Pindah ke Dashboard & Bawa Data
                         Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-                        intent.putExtra("NAMA", namaUser);     // Kirim Nama
-                        intent.putExtra("JABATAN", jabatan);   // Kirim Jabatan
-                        intent.putExtra("ROLE", roleId);       // [BARU] Kirim Role
+                        intent.putExtra("NAMA", namaUser);
+                        intent.putExtra("JABATAN", jabatan);
+                        intent.putExtra("ROLE", roleId);
+                        intent.putExtra("USER_ID", userId); // [PENTING] Kirim ID ke Dashboard
 
                         startActivity(intent);
                         finish(); // Agar user tidak bisa kembali ke login pakai tombol back

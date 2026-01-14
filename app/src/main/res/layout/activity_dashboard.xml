@@ -15,6 +15,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/teal_700"
             android:padding="24dp">
 
             <TextView
@@ -22,16 +23,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Halo, User!"
-                android:textColor="@android:color/black"
-                android:textSize="24sp"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvJabatan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvGreeting"
-                android:text="Selamat datang di Inventory App"
-                android:textColor="@android:color/black"
+                android:text="Jabatan"
+                android:textColor="#E0E0E0"
                 android:textSize="14sp"
                 android:layout_marginTop="4dp"/>
         </RelativeLayout>
@@ -40,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="2"
-            android:padding="16dp"
+            android:padding="12dp"
             android:alignmentMode="alignMargins">
 
             <androidx.cardview.widget.CardView
@@ -50,7 +52,7 @@
                 android:layout_columnWeight="1"
                 android:layout_margin="8dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardElevation="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -60,29 +62,30 @@
                     android:padding="24dp">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_view"
-                        app:tint="#4CAF50"/>
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:src="@drawable/ic_launcher_foreground"
+                        app:tint="@color/purple_500"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="List Aset"
+                        android:text="List Data Aset"
                         android:textStyle="bold"
+                        android:textSize="16sp"
                         android:textColor="#333"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardLapor"
+                android:id="@+id/cardReportAsset"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="8dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardElevation="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -92,49 +95,18 @@
                     android:padding="24dp">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_report_image"
-                        app:tint="#F44336"/>
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:src="@drawable/ic_launcher_foreground"
+                        app:tint="@color/purple_500"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Lapor Cepat"
+                        android:text="List Data Aset"
                         android:textStyle="bold"
-                        android:textColor="#333"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardLainnya"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="24dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_myplaces"
-                        app:tint="#2196F3"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Lainnya"
-                        android:textStyle="bold"
+                        android:textSize="16sp"
                         android:textColor="#333"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -156,8 +128,8 @@
                     android:padding="24dp">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
                         android:src="@android:drawable/ic_lock_power_off"
                         app:tint="#757575"/>
 
@@ -166,10 +138,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="Keluar"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#333"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+
 
         </GridLayout>
 
