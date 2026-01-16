@@ -1,8 +1,9 @@
 package com.tmfw.inventory_app.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-public class HistoryItem {
+public class HistoryItem implements Serializable {
     @SerializedName("service_id")
     private String serviceId;
 
@@ -21,6 +22,9 @@ public class HistoryItem {
     @SerializedName("foto_url")
     private String fotoUrl;
 
+    @SerializedName("kategori_nm") // 3. Tambah Field Baru
+    private String kategori;
+
     // Getter
     public String getServiceId() { return serviceId; }
     public String getAssetName() { return assetName; }
@@ -28,4 +32,5 @@ public class HistoryItem {
     public String getTanggal() { return tanggal; }
     public String getStatus() { return status; }
     public String getFotoUrl() { return fotoUrl; }
+    public String getKategori() { return kategori; }
 }

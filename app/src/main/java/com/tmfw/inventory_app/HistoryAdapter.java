@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.tmfw.inventory_app.model.HistoryItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +66,26 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             holder.tvStatus.setTextColor(Color.GRAY);
         }
 
-        // 3. Gambar (Opsional: Jika Anda pakai Library Glide, load di sini)
-        // Sementara kita pakai icon default dulu agar tidak error
-        holder.imgHistory.setImageResource(R.drawable.ic_launcher_foreground);
+        // fitur tampil gambar glide
+
+        if (item.getFotoUrl() != null && !item.getFotoUrl().isEmpty()) {
+            Glide.with(context)
+                    .load(item.getFotoUrl())                // URL dari JSON
+                    .placeholder(R.drawable.ic_launcher_background) // Tampil saat loading
+                    .error(R.drawable.ic_launcher_foreground)       // Tampil jika link error/gagal
+                    .centerCrop()                           // Potong gambar agar rapi (kotak)
+                    .into(holder.imgHistory);
+        } else {
+            // Jika user tidak upload foto, tampilkan icon default
+            holder.imgHistory.setImageResource(R.drawable.ic_launcher_foreground);
+        }
+
+        // Di dalam onBindViewHolder
+        holder.itemView.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(context, HistoryDetailActivity.class);
+            intent.putExtra("ITEM_HISTORY", item); // Mengirim seluruh objek
+            context.startActivity(intent);
+        });
     }
 
     @Override
