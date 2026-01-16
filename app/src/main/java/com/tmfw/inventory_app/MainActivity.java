@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
                         // Pindah ke Dashboard & Bawa Data
                         Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
                         intent.putExtra("NAMA", namaUser);
-                        intent.putExtra("JABATAN", jabatan);
+                        intent.putExtra("NAMA", response.body().getData().getUsername());
+                        intent.putExtra("JABATAN", response.body().getData().getRole());
                         intent.putExtra("ROLE", roleId);
                         intent.putExtra("USER_ID", userId); // [PENTING] Kirim ID ke Dashboard
 

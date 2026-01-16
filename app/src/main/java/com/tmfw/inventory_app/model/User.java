@@ -16,13 +16,13 @@ public class User {
     @SerializedName("jabatan")
     private String jabatan;
 
-    @SerializedName("role")
-    private String role;
+    @SerializedName("nama_role")
+    private String roleName;
 
     // Getter
     public String getUserId() { return userId; }
     public String getUsername() { return username; }
     public String getNamaLengkap() { return namaLengkap; }
     public String getJabatan() { return jabatan; }
-    public String getRole() { return role; }
+    public String getRole() { return roleName; }
 }

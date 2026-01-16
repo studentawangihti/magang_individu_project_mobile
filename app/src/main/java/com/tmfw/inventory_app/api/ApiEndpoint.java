@@ -1,6 +1,7 @@
 package com.tmfw.inventory_app.api;
 
 import com.tmfw.inventory_app.model.AssetResponse;
+import com.tmfw.inventory_app.model.DashboardStatsResponse;
 import com.tmfw.inventory_app.model.GeneralResponse; // Import Model Baru
 import com.tmfw.inventory_app.model.LoginResponse;
 import com.tmfw.inventory_app.model.SingleAssetResponse;
@@ -46,4 +47,7 @@ public interface ApiEndpoint {
 
     @GET("api/asset/history")
     Call<HistoryResponse> getHistory(@Query("user_id") String userId);
+
+    @GET("api/asset/dashboard_stats")
+    Call<DashboardStatsResponse> getDashboardStats(@Query("user_id") String userId);
 }
