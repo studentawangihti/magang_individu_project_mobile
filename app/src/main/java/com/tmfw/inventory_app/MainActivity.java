@@ -2,11 +2,14 @@ package com.tmfw.inventory_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+// --- [PENTING] Import Library Material Design ---
+import com.google.android.material.textfield.TextInputEditText;
 
 import com.tmfw.inventory_app.api.ApiClient;
 import com.tmfw.inventory_app.model.LoginResponse;
@@ -17,26 +20,33 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText etUsername, etPassword;
-    Button btnLogin;
+    // Menggunakan TextInputEditText sesuai layout XML baru
+    private TextInputEditText etUsername, etPassword;
+    private Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Inisialisasi View
+        // 1. Inisialisasi View
+        // ID-nya tetap sama seperti di XML (etUsername, etPassword, btnLogin)
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
-        btnLogin = findViewById(R.id.btnLogin);
+        btnLogin   = findViewById(R.id.btnLogin);
 
-        // Event Klik Tombol Login
+        // 2. Event Klik Tombol Login
         btnLogin.setOnClickListener(v -> {
-            String u = etUsername.getText().toString();
-            String p = etPassword.getText().toString();
+            // Ambil teks dan hapus spasi di awal/akhir (trim)
+            String u = etUsername.getText().toString().trim();
+            String p = etPassword.getText().toString().trim();
 
-            if(u.isEmpty() || p.isEmpty()) {
-                Toast.makeText(this, "Username dan Password harus diisi!", Toast.LENGTH_SHORT).show();
+            if(u.isEmpty()) {
+                etUsername.setError("Username wajib diisi");
+                etUsername.requestFocus();
+            } else if (p.isEmpty()) {
+                etPassword.setError("Password wajib diisi");
+                etPassword.requestFocus();
             } else {
                 loginProses(u, p);
             }
@@ -44,46 +54,58 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginProses(String username, String password) {
+        // Tampilkan loading sederhana (opsional, biar user tau sedang proses)
+        btnLogin.setEnabled(false);
+        btnLogin.setText("Loading...");
+
         // Memanggil API Login
-        ApiClient.getApi().login(username, password).enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    LoginResponse res = response.body();
+        ApiClient.getClient().create(com.tmfw.inventory_app.api.ApiEndpoint.class).login(username, password)
+                .enqueue(new Callback<LoginResponse>() {
+                    @Override
+                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                        btnLogin.setEnabled(true);
+                        btnLogin.setText("MASUK");
 
-                    if (res.getStatus() == 200) {
-                        // Login BERHASIL
-                        String namaUser = res.getData().getNamaLengkap();
-                        String jabatan  = res.getData().getJabatan();
-                        String roleId   = res.getData().getRole();
-                        String userId   = res.getData().getUserId(); // [PENTING] Ambil User ID
+                        if (response.isSuccessful() && response.body() != null) {
+                            LoginResponse res = response.body();
 
-                        Toast.makeText(MainActivity.this, "Login Sukses!", Toast.LENGTH_SHORT).show();
+                            if (res.getStatus() == 200) {
+                                // Login BERHASIL
+                                // Ambil data dari response (pastikan getter di Model User.java sesuai)
+                                String namaUser = res.getData().getNamaLengkap(); // Ambil Nama Asli
+                                String jabatan  = res.getData().getJabatan();
+                                String role     = res.getData().getRole();     // Misal: "Admin" atau "Staff"
+                                String userId   = res.getData().getUserId();
 
-                        // Pindah ke Dashboard & Bawa Data
-                        Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-                        intent.putExtra("NAMA", namaUser);
-                        intent.putExtra("NAMA", response.body().getData().getUsername());
-                        intent.putExtra("JABATAN", response.body().getData().getRole());
-                        intent.putExtra("ROLE", roleId);
-                        intent.putExtra("USER_ID", userId); // [PENTING] Kirim ID ke Dashboard
+                                Toast.makeText(MainActivity.this, "Selamat Datang, " + namaUser, Toast.LENGTH_SHORT).show();
 
-                        startActivity(intent);
-                        finish(); // Agar user tidak bisa kembali ke login pakai tombol back
-                    } else {
-                        // Login GAGAL (Password Salah / User Tidak Ditemukan)
-                        Toast.makeText(MainActivity.this, res.getMessage(), Toast.LENGTH_SHORT).show();
+                                // Pindah ke Dashboard & Bawa Data
+                                Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+
+                                intent.putExtra("NAMA", response.body().getData().getNamaLengkap());
+                                intent.putExtra("JABATAN", response.body().getData().getJabatan());
+                                intent.putExtra("ROLE", response.body().getData().getRole()); // <--- Kirim Role
+                                intent.putExtra("USER_ID", response.body().getData().getUserId());     // ID User (Penting untuk transaksi)
+
+                                startActivity(intent);
+                                finish(); // Tutup halaman login agar tidak bisa di-back
+                            } else {
+                                // Login GAGAL (Password Salah)
+                                Toast.makeText(MainActivity.this, res.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "Gagal menghubungi server", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                } else {
-                    Toast.makeText(MainActivity.this, "Gagal menghubungi server: " + response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                // Error Koneksi (WiFi mati, IP salah, Server mati)
-                Toast.makeText(MainActivity.this, "Error Koneksi: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+                    @Override
+                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        btnLogin.setEnabled(true);
+                        btnLogin.setText("MASUK");
+
+                        // Error Koneksi
+                        Toast.makeText(MainActivity.this, "Koneksi Bermasalah: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }
