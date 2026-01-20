@@ -2,6 +2,7 @@ package com.tmfw.inventory_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -98,14 +99,22 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                    @Override
+                                        @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
                         btnLogin.setEnabled(true);
                         btnLogin.setText("MASUK");
 
-                        // Error Koneksi
-                        Toast.makeText(MainActivity.this, "Koneksi Bermasalah: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        // Toast untuk user
+                        Toast.makeText(
+                                MainActivity.this,
+                                "Koneksi Bermasalah: " + t.getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show();
+
+                        // Log untuk developer
+                        Log.e("LOGIN_ERROR", "Koneksi bermasalah", t);
                     }
+
                 });
     }
 }
